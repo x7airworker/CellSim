@@ -33,6 +33,7 @@ public class SimulationRenderer extends JPanel {
         super.paintComponent(graphics);
 
         Graphics2D g = (Graphics2D) graphics.create();
+        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
         Font font = g.getFont();
         g.setFont(font.deriveFont(6f));
