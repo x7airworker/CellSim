@@ -13,6 +13,7 @@ public class SimulationWindow extends JFrame {
     private final SimulationRenderer renderer;
     private final JSplitPane root;
     private final JCheckBox pausedCheckbox = new JCheckBox("Paused");
+    private final JLabel cellAmountLabel = new JLabel();
 
     public SimulationWindow(SimulationState state, World world) throws HeadlessException {
         super("Cell Simulation");
@@ -25,6 +26,11 @@ public class SimulationWindow extends JFrame {
 
         JPanel optionsPanel = new JPanel();
         optionsPanel.add(new JLabel("Simulation Options"));
+        optionsPanel.add(new JSeparator());
+
+        cellAmountLabel.setText("Cells alive " + state.getCellAmount());
+        optionsPanel.add(cellAmountLabel);
+
         optionsPanel.add(new JSeparator());
 
         JLabel delayLabel = new JLabel("Delay");
@@ -57,5 +63,6 @@ public class SimulationWindow extends JFrame {
 
     private void onStateUpdate() {
         pausedCheckbox.setSelected(state.isPaused());
+        cellAmountLabel.setText("Cells alive " + state.getCellAmount());
     }
 }

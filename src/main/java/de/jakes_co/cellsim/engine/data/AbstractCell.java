@@ -6,6 +6,8 @@ public abstract class AbstractCell {
 
     public abstract Color getColor();
 
-    public void tick(Coordinate currentLocation) {}
+    public boolean tick(Coordinate currentLocation, World world) {
+        return true;
+    }
 
 }

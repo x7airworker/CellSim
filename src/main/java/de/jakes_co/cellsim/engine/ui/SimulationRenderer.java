@@ -72,7 +72,7 @@ public class SimulationRenderer extends JPanel {
 
             // Limit the scale within a specified range
             scale = Math.max(10, Math.min(1000, scale));
-            Logger.info("Scale changed " + scale);
+            Logger.debug("Scale changed " + scale);
 
             // Repaint the panel to reflect the new scale
             repaint();

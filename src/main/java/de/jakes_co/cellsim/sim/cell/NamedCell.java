@@ -14,4 +14,8 @@ public abstract class NamedCell extends AbstractCell {
     public String getName() {
         return name;
     }
+
+    public String toString() {
+        return "Cell (" + name + ")";
+    }
 }

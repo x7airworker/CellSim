@@ -6,8 +6,7 @@ import de.jakes_co.cellsim.engine.ui.SimulationWindow;
 import org.tinylog.Logger;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class Simulation {
@@ -21,13 +20,18 @@ public class Simulation {
     public void cycle() {
         Logger.debug("Tick @ " + System.currentTimeMillis());
         Map<Coordinate, Coordinate> moves = new HashMap<>();
+        List<Coordinate> killed = new LinkedList<>();
         world.forEach((coord, cell) -> {
             Coordinate oldCoords  = coord.clone();
-            cell.tick(coord);
-            if (!coord.equals(oldCoords))
+            boolean alive = cell.tick(coord, world);
+            if (!alive) {
+                killed.add(oldCoords);
+            } else if (!coord.equals(oldCoords)) {
                 moves.put(oldCoords, coord);
+            }
         });
         synchronized (world) {
+            killed.forEach(world::destroy);
             moves.forEach(world::move);
         }
         simulationWindow.getRenderer().repaint(0);

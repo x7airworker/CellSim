@@ -3,7 +3,6 @@ package de.jakes_co.cellsim.engine.gen;
 import de.jakes_co.cellsim.engine.data.AbstractCell;
 import de.jakes_co.cellsim.engine.data.Coordinate;
 import de.jakes_co.cellsim.engine.data.World;
-import de.jakes_co.cellsim.sim.cell.LivingCell;
 
 import java.util.Random;
 import java.util.function.Supplier;

@@ -24,7 +24,7 @@ public class Bootstrap {
         }
 
         EntitySpawner spawner = new EntitySpawner(sim.getWorld(), LivingCell::new);
-        spawner.spawn(10);
+        spawner.spawn(100, 1000, 1000);
 
         sim.showGui();
         sim.start();

@@ -43,6 +43,15 @@ public class Coordinate {
         return new Coordinate(x, y);
     }
 
+    public Coordinate[] getDirectNeighbours() {
+        return new Coordinate[] {
+                new Coordinate(x, y + 1),
+                new Coordinate(x + 1, y),
+                new Coordinate(x, y - 1),
+                new Coordinate(x - 1, y)
+        };
+    }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

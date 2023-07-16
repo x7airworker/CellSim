@@ -10,6 +10,7 @@ public class SimulationState {
     private final List<Runnable> callbacks = new ArrayList<>();
     private long simulationDelay = 1000L;
     private boolean paused = false;
+    private int cellAmount;
 
     public long getSimulationDelay() {
         return simulationDelay;
@@ -35,6 +36,16 @@ public class SimulationState {
 
     public void togglePaused() {
         setPaused(!paused); // intentionally call setter to also have logging output
+    }
+
+    public int getCellAmount() {
+        return cellAmount;
+    }
+
+    public SimulationState setCellAmount(int cellAmount) {
+        this.cellAmount = cellAmount;
+        fireCallbacks();
+        return this;
     }
 
     public void subscribe(Runnable callback) {

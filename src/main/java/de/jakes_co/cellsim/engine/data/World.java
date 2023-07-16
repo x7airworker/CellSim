@@ -6,7 +6,6 @@ import java.util.TreeMap;
 import java.util.function.BiConsumer;
 
 public class World {
-
     private final TreeMap<Long, AbstractCell> cells = new TreeMap<>();
 
     public boolean isObstructed(Coordinate coordinate) {
@@ -32,7 +31,18 @@ public class World {
         Logger.debug("Moved cell " + oldCoordinate + " to " + newCoordinate);
     }
 
-    public AbstractCell remove(Coordinate coordinate) {
+    public AbstractCell[] resolveCoordinates(Coordinate[] coords) {
+        AbstractCell[] resolvedCells = new AbstractCell[coords.length];
+
+        for (int i = 0; i < coords.length; i++) {
+            resolvedCells[i] = cells.get(coords[i].toLongValue());
+        }
+
+        return resolvedCells;
+    }
+
+    public AbstractCell destroy(Coordinate coordinate) {
+        Logger.info("Destroyed cell at " + coordinate);
         return cells.remove(coordinate.toLongValue());
     }
 
@@ -43,5 +53,4 @@ public class World {
     public int size() {
         return cells.size();
     }
-
 }
