@@ -7,8 +7,6 @@ import org.tinylog.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 
 public class SimulationRenderer extends JPanel {
     private static final int SCALE_NAME_THRESOLD = 700;
@@ -16,8 +14,8 @@ public class SimulationRenderer extends JPanel {
     private static final int SCALE_FACTOR = 10; // Scale factor for each mouse wheel rotation
     private int scale = INITIAL_SCALE;
     private final World world;
-    private double camX = 500;
-    private double camY = 500;
+    private double camX = 0;
+    private double camY = 0;
 
     public SimulationRenderer(World world) {
         super();
@@ -25,7 +23,9 @@ public class SimulationRenderer extends JPanel {
         setFocusable(true);
         requestFocusInWindow();
         addMouseWheelListener(new ScaleListener());
-        addMouseListener(new MoveListener());
+        MoveListener moveListener = new MoveListener();
+        addMouseListener(moveListener);
+        addMouseMotionListener(moveListener);
     }
 
     @Override
@@ -79,9 +79,11 @@ public class SimulationRenderer extends JPanel {
         }
     }
 
-    private class MoveListener implements MouseListener {
+    private class MoveListener implements MouseListener, MouseMotionListener {
         private int startX;
         private int startY;
+        private int previousX;
+        private int previousY;
 
         public void mouseClicked(MouseEvent e) {
 
@@ -93,10 +95,6 @@ public class SimulationRenderer extends JPanel {
         }
 
         public void mouseReleased(MouseEvent e) {
-            camX += (startX - e.getX());
-            camY += (startY - e.getY());
-            repaint();
-            Logger.debug("Dragged to " + e.getX() + " " + e.getY());
         }
 
         public void mouseEntered(MouseEvent e) {
@@ -104,6 +102,27 @@ public class SimulationRenderer extends JPanel {
         }
 
         public void mouseExited(MouseEvent e) {
+
+        }
+
+        public void mouseDragged(MouseEvent e) {
+            int currentX = e.getX();
+            int currentY = e.getY();
+
+            int deltaX = currentX - previousX;
+            int deltaY = currentY - previousY;
+
+            // Update previous position
+            previousX = currentX;
+            previousY = currentY;
+
+            camX += deltaX;
+            camY += deltaY;
+            repaint();
+            Logger.debug("Dragged to " + e.getX() + " " + e.getY());
+        }
+
+        public void mouseMoved(MouseEvent e) {
 
         }
     }
