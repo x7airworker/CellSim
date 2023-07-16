@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SimulationRenderer extends JPanel {
-    private static final int SCALE_NAME_THRESOLD = 700;
+    private static final int SCALE_NAME_THRESHOLD = 700;
     private static final int INITIAL_SCALE = 100; // Initial scale percentage
     private static final int SCALE_FACTOR = 10; // Scale factor for each mouse wheel rotation
     private int scale = INITIAL_SCALE;
@@ -51,7 +51,7 @@ public class SimulationRenderer extends JPanel {
                 g.setColor(cell.getColor());
                 g.drawLine(coord.getX(), coord.getY(), coord.getX(), coord.getY());
 
-                if (scale >= SCALE_NAME_THRESOLD && cell instanceof NamedCell) {
+                if (scale >= SCALE_NAME_THRESHOLD && cell instanceof NamedCell) {
                     String name = ((NamedCell) cell).getName();
                     float width = g.getFontMetrics().stringWidth(name);
                     g.drawString(name, coord.getX() - (width / 2), coord.getY() - 1);
