@@ -2,26 +2,35 @@ package de.jakes_co.cellsim.engine;
 
 import de.jakes_co.cellsim.engine.data.Coordinate;
 import de.jakes_co.cellsim.engine.data.World;
-import de.jakes_co.cellsim.engine.ui.SimulationWindow;
+import de.jakes_co.cellsim.engine.state.StateChangeObserver;
+import de.jakes_co.cellsim.engine.state.SimulationState;
+import de.jakes_co.cellsim.sim.cell.LivingCell;
+import de.jakes_co.cellsim.util.ObserverManager;
 import org.tinylog.Logger;
 
-import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Simulation {
 
+    private final ObserverManager<StateChangeObserver, SimulationState> observers = new ObserverManager<>();
     private final SimulationState state = new SimulationState();
-    private final World world = new World();
-    private final SimulationWindow simulationWindow = new SimulationWindow(state, world);
+    private final World world;
     private Thread simulationThread;
-    private int cycleCount = 0;
+
+    public Simulation(World world) {
+        this.world = world;
+    }
 
     public void cycle() {
         Logger.debug("Tick @ " + System.currentTimeMillis());
         Map<Coordinate, Coordinate> moves = new HashMap<>();
         List<Coordinate> killed = new LinkedList<>();
+        AtomicInteger aliveCells = new AtomicInteger();
         world.forEach((coord, cell) -> {
+            if (cell instanceof LivingCell)
+                aliveCells.getAndIncrement();
             Coordinate oldCoords  = coord.clone();
             boolean alive = cell.tick(coord, world);
             if (!alive) {
@@ -30,12 +39,15 @@ public class Simulation {
                 moves.put(oldCoords, coord);
             }
         });
+        state.setCellAmount(aliveCells.get());
         synchronized (world) {
             killed.forEach(world::destroy);
             moves.forEach(world::move);
         }
-        simulationWindow.getRenderer().repaint(0);
-        cycleCount++;
+
+        state.incrementCycleCount();
+
+        observers.change(state);
     }
 
 
@@ -60,19 +72,16 @@ public class Simulation {
             simulationThread.interrupt();
     }
 
-    public void showGui() {
-        SwingUtilities.invokeLater(simulationWindow::showWindow);
-    }
-
     public World getWorld() {
         return world;
     }
 
-    public int getCycleCount() {
-        return cycleCount;
+    public void observe(StateChangeObserver observer) {
+        observers.observe(observer);
     }
 
-    public SimulationState getState() {
-        return state;
+    public void togglePaused() {
+        state.togglePaused();
+        observers.change(state);
     }
 }
